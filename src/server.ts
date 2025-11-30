@@ -50,7 +50,6 @@ app.get("/", async (req: Request, res: Response) => {
   res.send("Hello Next Level Developer !");
 });
 
-
 //user CRUD
 //get all users route
 app.get("/users", async (req: Request, res: Response) => {
@@ -155,6 +154,35 @@ app.delete("/users/:id", async (req: Request, res: Response) => {
 
 //todos CRUD
 
+//get all todos
+app.get("/todos", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(`SELECT * FROM todos`);
+    res.status(200).send({
+      success: true,
+      message: "Data retrieved successfully",
+      data: result.rows,
+    });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+//create todo
+app.post("/todos", async (req: Request, res: Response) => {
+  const { user_id, title } = req.body;
+  try {
+    const result = await pool.query(
+      `INSERT INTO todos(user_id, title) VALUES($1, $2) RETURNING *`,
+      [user_id, title]
+    );
+
+    res
+      .status(200)
+      .json({ success: true, message: "Todo created", data: result.rows[0] });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
