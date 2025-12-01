@@ -1,6 +1,7 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { Request, Response } from "express";
 import config from "./config";
 import initDB, { pool } from "./config/db";
+import logger from "./middleware/logger";
 
 const app = express();
 const port = config.port;
@@ -11,14 +12,6 @@ app.use(express.json());
 // app.use(express.urlencoded());
 
 initDB();
-
-//logger middleware
-const logger = (req: Request, res: Response, next: NextFunction) => {
-  console.log(
-    `[${new Date().toISOString()}] method ${req.method} path ${req.path}`
-  );
-  next();
-};
 
 app.get("/", logger, async (req: Request, res: Response) => {
   res.send("Hello Next Level Developer !");
