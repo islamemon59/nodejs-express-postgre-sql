@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import config from "./config";
 import initDB, { pool } from "./config/db";
 import logger from "./middleware/logger";
+import { userRoutes } from "./modules/user/user.routes";
 
 const app = express();
 const port = config.port;
@@ -19,18 +20,7 @@ app.get("/", logger, async (req: Request, res: Response) => {
 
 //user CRUD
 //get all users route
-app.get("/users", async (req: Request, res: Response) => {
-  try {
-    const result = await pool.query(`SELECT * FROM users`);
-    res.status(200).send({
-      success: true,
-      message: "Data retrieved successfully",
-      data: result.rows,
-    });
-  } catch (error: any) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
+// app.get("/users", );
 
 //get single user by id
 app.get("/users/:id", async (req: Request, res: Response) => {
@@ -55,22 +45,8 @@ app.get("/users/:id", async (req: Request, res: Response) => {
 });
 
 //users post route
-app.post("/users", async (req: Request, res: Response) => {
-  const { name, email } = req.body;
-  try {
-    const result = await pool.query(
-      `INSERT INTO users(name, email) VALUES($1, $2) RETURNING *`,
-      [name, email]
-    );
-    res.status(201).json({
-      success: true,
-      message: "inserted successfully",
-      data: result.rows[0],
-    });
-  } catch (error: any) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
+app.use("/users", userRoutes);
+// app.post("/users", );
 
 //update single user
 app.put("/users/:id", async (req: Request, res: Response) => {
