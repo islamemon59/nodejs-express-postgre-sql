@@ -19,8 +19,8 @@ app.get("/", logger, async (req: Request, res: Response) => {
 });
 
 //user CRUD
-//get all users route
-// app.get("/users", );
+//users route
+app.use("/users", userRoutes);
 
 //get single user by id
 app.get("/users/:id", async (req: Request, res: Response) => {
@@ -44,9 +44,6 @@ app.get("/users/:id", async (req: Request, res: Response) => {
   }
 });
 
-//users post route
-app.use("/users", userRoutes);
-// app.post("/users", );
 
 //update single user
 app.put("/users/:id", async (req: Request, res: Response) => {
