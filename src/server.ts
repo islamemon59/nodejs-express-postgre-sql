@@ -1,10 +1,9 @@
 import express, { NextFunction, Request, Response } from "express";
 import { Pool } from "pg";
-import dotenv from "dotenv";
-import path from "path";
-dotenv.config({ path: path.join(process.cwd(), ".env") });
+import config from "./config";
+
 const app = express();
-const port = 5000;
+const port = config.port;
 
 //json parser
 app.use(express.json());
@@ -12,7 +11,7 @@ app.use(express.json());
 // app.use(express.urlencoded());
 
 const pool = new Pool({
-  connectionString: `${process.env.CONNECTION_STR}`,
+  connectionString: `${config.connection_str}`,
 });
 
 //DB
